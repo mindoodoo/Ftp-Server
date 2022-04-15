@@ -40,20 +40,22 @@ int main()
     // Variables to store information on incoming connection
     struct sockaddr_in addrIncoming; // Socket address struct for incoming connection
     int size = sizeof(addrIncoming);
-    int received_fd = -1;
+    int client_fd = -1;
 
-    // Accept one (first) connection
-    if ((received_fd = accept(socket_fd, (struct sockaddr *)&addrIncoming, &size)) < 0)
-        printf("Accepting first connection failed\n");
-    else
-        printf("Incoming connection is : %s\nFrom port : %u\n", inet_ntoa(addrIncoming.sin_addr),
-        ntohs(addrIncoming.sin_port));
+    char *msg = "Hello client !";
 
-    // Send message to peer
-    write(received_fd, "Hello World !!\n", 15);
+    while (1) {
+        // Accept one (first) connection
+        if ((client_fd = accept(socket_fd, (struct sockaddr *)&addrIncoming, &size)) < 0)
+            printf("Accepting first connection failed\n");
+        else
+            printf("Incoming connection is : %s\nFrom port : %u\n", inet_ntoa(addrIncoming.sin_addr),
+            ntohs(addrIncoming.sin_port));
 
-    // while(1);
+        write(client_fd, msg, strlen(msg));
 
-    // close(socket_fd);
-    // close(received_fd);
+        close(client_fd);
+    }
+
+    close(socket_fd);
 }
