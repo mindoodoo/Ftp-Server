@@ -26,8 +26,6 @@ int main()
     struct stat sb;
     char *msg = malloc(1024);
 
-    while (1) {
-        read(socket_fd, msg, 1024);
-        printf("Msg is : %s\n", msg);
-    }
+    read(socket_fd, msg, 1024);
+    printf("Msg is : %s\n", msg);
 }

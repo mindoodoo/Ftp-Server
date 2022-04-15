@@ -52,9 +52,14 @@ int main()
             printf("Incoming connection is : %s\nFrom port : %u\n", inet_ntoa(addrIncoming.sin_addr),
             ntohs(addrIncoming.sin_port));
 
-        write(client_fd, msg, strlen(msg));
+        pid_t pid = fork();
 
-        close(client_fd);
+        // Exit child process
+        if (!pid) {
+            write(client_fd, msg, strlen(msg));
+            close(client_fd);
+            exit(0);
+        }
     }
 
     close(socket_fd);
