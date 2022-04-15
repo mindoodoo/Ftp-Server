@@ -13,7 +13,7 @@ int main()
     // AF_INET = IPV4
     // SOCK_STREAM = TCP
     // 0 = Default protocol for arg 2
-    int socket_fd = socket(AF_INET, SOCK_STREAM, 0);
+    int server_fd = socket(AF_INET, SOCK_STREAM, 0);
 
     struct sockaddr_in addr; // Socket address
     addr.sin_family = AF_INET;
@@ -24,17 +24,17 @@ int main()
 
     int opt = 1;
 
-    setsockopt(socket_fd, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt));
+    setsockopt(server_fd, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt));
 
     // Bind socket to internet address
-    if (bind(socket_fd, (struct sockaddr *)&addr, addrSize) < 0)
+    if (bind(server_fd, (struct sockaddr *)&addr, addrSize) < 0)
         printf("Socket bind failed\n");
     else
-        printf("Succesfully bound socket with file descriptor : %d\n", socket_fd);
+        printf("Succesfully bound socket with file descriptor : %d\n", server_fd);
 
     // Marks socket fd as passive and listens for incoming connections
     // First arg is fd, second arg is queue length
-    if (listen(socket_fd, 10) == -1)
+    if (listen(server_fd, 10) == -1)
         printf("Listen failed\n");
 
     // Variables to store information on incoming connection
@@ -42,25 +42,35 @@ int main()
     int size = sizeof(addrIncoming);
     int client_fd = -1;
 
-    char *msg = "Hello client !";
+    char *msg = "Hello client !\n";
 
+    // Poll call variables
+    struct pollfd *fds = calloc(10, sizeof(struct pollfd));
+    nfds_t nfds = 10;
+    int fd_index = 1;
+    int poll_ret = 0;
+
+    // Init fds array
+    for (int i = 0; i < nfds; i++) {
+        fds[i].fd = -1;
+        fds[i].events = POLLIN;
+    }
+
+    fds[0].fd = server_fd;
+
+    printf("Starting polling...\n");
     while (1) {
-        // Accept one (first) connection
-        if ((client_fd = accept(socket_fd, (struct sockaddr *)&addrIncoming, &size)) < 0)
-            printf("Accepting first connection failed\n");
-        else
-            printf("Incoming connection is : %s\nFrom port : %u\n", inet_ntoa(addrIncoming.sin_addr),
-            ntohs(addrIncoming.sin_port));
+        poll_ret = poll(fds, nfds, -1);
 
-        pid_t pid = fork();
-
-        // Exit child process
-        if (!pid) {
-            write(client_fd, msg, strlen(msg));
-            close(client_fd);
-            exit(0);
+        if (poll_ret) {
+            // Check if new connection to accept
+            if (fds[0].revents & POLLIN) {
+                fds[fd_index].fd = accept(server_fd, (struct sockaddr*) &addrIncoming, &size);
+                fd_index;
+                write(fds[fd_index].fd, msg, strlen(msg));
+            }
         }
     }
 
-    close(socket_fd);
+    close(server_fd);
 }
