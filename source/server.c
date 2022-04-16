@@ -30,10 +30,45 @@ int setup_cmd_socket(int port)
     return cmd_fd;
 }
 
+struct pollfd *init_poll_fds(int count, int server_fd)
+{
+    struct pollfd *poll_fds = calloc(count, sizeof(struct pollfd));
+
+    for (int i = 0; i < count; i++) {
+        poll_fds[i].fd = -1;
+        poll_fds[i].events = POLLIN;
+    }
+    poll_fds[0].fd = server_fd;
+    return poll_fds;
+}
+
+int handle_connections()
+{
+
+}
+
+int poll_loop(struct pollfd *poll_fds, nfds_t nfds)
+{
+    int poll_ret = 0;
+    
+    while (1) {
+        if ((poll_ret = poll(poll_fds, nfds, -1))) {
+            // Check if activity on cmd socket
+            if (poll_fds[0].revents)
+
+        }
+    }
+}
+
+// Main function of the server
 int my_ftp(int port, char *path)
 {
     int cmd_fd = setup_cmd_socket(port);
+    nfds_t nfds = 10;
+    struct pollfd *poll_fds = NULL;
 
     if (!cmd_fd)
         return 1;
+    poll_fds = init_poll_fds(nfds, cmd_fd);
+    poll_loop(poll_fds, nfds);
 }
