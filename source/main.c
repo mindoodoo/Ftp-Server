@@ -44,6 +44,11 @@ int main(int ac, char **av)
         return 0;
     else if (arg_check == 1)
         return 84;
-    else
+    else {
         printf("Starting my_ftp ftp server...\n");
+        if (my_ftp(atoi(av[1]), av[2]))
+            return 84;
+        else
+            return 0;
+    }
 }

@@ -7,7 +7,8 @@
 
 CFLAGS = -I./include
 
-SERVER_SRC = source/main.c
+SERVER_SRC = source/main.c \
+	source/server.c
 
 all: server clean
 
