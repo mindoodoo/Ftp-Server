@@ -9,7 +9,9 @@ CFLAGS = -I./include
 
 SERVER_SRC = source/main.c \
 	source/server.c \
-	source/client_list.c
+	source/client_list.c \
+	source/cmd_handling.c \
+	source/utilities.c
 
 all: server clean
 

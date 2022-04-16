@@ -34,7 +34,15 @@ typedef struct client_s {
     struct client_s *previous;
 } client_t;
 
+// Core
 int my_ftp(int port, char *path);
+
+// Cmd handling
+int poll_loop(struct pollfd *poll_fds, nfds_t nfds);
+
+// Utilities
+int setup_cmd_socket(int port);
+struct pollfd *init_poll_fds(int count, int server_fd);
 
 // Client linked list
 client_t *push(client_t *head, client_t *new_client);
