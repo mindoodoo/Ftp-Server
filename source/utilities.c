@@ -41,3 +41,25 @@ struct pollfd *init_poll_fds(int count, int server_fd)
     poll_fds[0].fd = server_fd;
     return poll_fds;
 }
+
+int table_len(char **table)
+{
+    int count = 0;
+
+    for (; table[count]; count++);
+    return count;
+}
+
+void free_table(char **table)
+{
+    for (int i = 0; table[i]; i++)
+        free(table[i]);
+    free(table);
+}
+
+char *str_to_lowcase(char *str)
+{
+    for (int i = 0; str[i]; i++)
+        str[i] = tolower(str[i]);
+    return str;
+}

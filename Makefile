@@ -5,13 +5,14 @@
 ## .
 ##
 
-CFLAGS = -I./include
+CFLAGS = -I./include -g3
 
 SERVER_SRC = source/main.c \
 	source/server.c \
 	source/client_list.c \
 	source/cmd_handling.c \
-	source/utilities.c
+	source/utilities.c \
+	source/parsing.c
 
 all: server clean
 
