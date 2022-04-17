@@ -53,6 +53,9 @@ int my_ftp(int port, char *path);
 // Cmd handling
 int poll_loop(struct pollfd *poll_fds, nfds_t nfds);
 
+// Response
+void send_response(int client_fd, char *code, char *msg);
+
 // Parsing
 request_t parse_request(char *raw);
 

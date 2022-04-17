@@ -35,16 +35,14 @@ int nfds)
     for (int i = 0; i < nfds; i++)
         // Note this does not handle client disconnection
         if (poll_fds[i].revents & POLLIN) {
-            if (!(client = find_client(poll_fds[i].fd, client_list))) {
-                ERR("Client not present in linked list\n"); // This print can be in the LL function
+            if (!(client = find_client(poll_fds[i].fd, client_list)))
                 continue;
-            }
             read(client->fd, raw, 4096);
             request = parse_request(raw);
             if (request.valid)
                 printf("Received valid request\n");
             else
-                printf("INVALID request received\n");
+                send_response(client->fd, "500", "Synthaxe Error, command unrecognized.");
         }
     free(raw); // Is reuse good idea ?
     return client_list;
@@ -57,10 +55,10 @@ int poll_loop(struct pollfd *poll_fds, nfds_t nfds)
     
     while (1) {
         if ((poll_ret = poll(poll_fds, nfds, -1))) {
+            client_list = client_handling(client_list, poll_fds, nfds);
             // Check for incoming connections
             if (poll_fds[0].revents)
                 client_list = handle_connections(poll_fds[0].fd, client_list, poll_fds);
-            client_list = client_handling(client_list, poll_fds, nfds);
         }
     }
 }
