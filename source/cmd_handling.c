@@ -18,8 +18,10 @@ struct pollfd *poll_fds)
     if (new_client->fd == -1) {
         ERR("Accepting incoming connection has failed\n");
         return client_list;
-    } else
+    } else {
         client_list = push(client_list, new_client);
+        send_response(new_client->fd, "220", "Service ready for new user");
+    }
     for (fd_index = 0; poll_fds[fd_index].fd != -1; fd_index++);
     poll_fds[fd_index].fd = new_client->fd;
     return client_list;
