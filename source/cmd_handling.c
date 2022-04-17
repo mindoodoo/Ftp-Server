@@ -14,7 +14,7 @@ struct pollfd *poll_fds)
     int fd_index;
 
     new_client->fd = accept(server_fd,
-    (struct sockaddr *)&new_client->client_sock, &new_client->sock_size);
+    (struct sockaddr *)&new_client->client_sock, &new_client->sock_len);
     if (new_client->fd == -1) {
         ERR("Accepting incoming connection has failed\n");
         return client_list;
@@ -28,7 +28,7 @@ struct pollfd *poll_fds)
 client_t *client_handling(client_t *client_list, struct pollfd *poll_fds,
 int nfds)
 {
-    char *raw = malloc(sizeof(char) * 4096);
+    char *raw = calloc(4096, sizeof(char));
     client_t *client = NULL;
     request_t request;
 

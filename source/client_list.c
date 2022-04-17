@@ -46,6 +46,7 @@ client_t *create_client()
 {
     client_t *new = malloc(sizeof(client_t));
 
+    new->sock_len = sizeof(struct sockaddr_in);
     new->previous = NULL;
     new->next = NULL;
     new->fd = 0;

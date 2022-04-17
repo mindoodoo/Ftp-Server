@@ -35,7 +35,7 @@ typedef struct client_s {
     int fd;
     int logged_in;
     struct sockaddr_in client_sock;
-    int sock_size;
+    socklen_t sock_len;
     int state;
     struct client_s *next;
     struct client_s *previous;
