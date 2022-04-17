@@ -25,9 +25,23 @@ struct pollfd *poll_fds)
     return client_list;
 }
 
+int process_request(client_t *client, request_t request)
+{
+    cmd_t commands[] = {
+        "user", &user_cmd,
+        "NULL", NULL
+    };
+
+    for (int i = 0; commands[i].ptr; i++)
+        if (!strcmp(request.prefix, commands[i].name))
+            return commands[i].ptr(client, request);
+    return -1;
+}
+
 client_t *client_handling(client_t *client_list, struct pollfd *poll_fds,
 int nfds)
 {
+    int cmd_ret = 0;
     char *raw = calloc(4096, sizeof(char));
     client_t *client = NULL;
     request_t request;
@@ -39,9 +53,11 @@ int nfds)
                 continue;
             read(client->fd, raw, 4096);
             request = parse_request(raw);
-            if (request.valid)
-                printf("Received valid request\n");
-            else
+            if (request.valid) {
+                if ((cmd_ret = process_request(client, request)) < 0)
+                    send_response(client->fd, "500", "Synthaxe Error, command unrecognized.");
+                // Add else for client request to disconnect    
+            } else
                 send_response(client->fd, "500", "Synthaxe Error, command unrecognized.");
         }
     free(raw); // Is reuse good idea ?

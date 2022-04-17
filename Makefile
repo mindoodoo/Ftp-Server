@@ -13,7 +13,8 @@ SERVER_SRC = source/main.c \
 	source/cmd_handling.c \
 	source/utilities.c \
 	source/parsing.c \
-	source/response.c
+	source/response.c \
+	source/commands/auth_cmd.c
 
 all: server clean
 

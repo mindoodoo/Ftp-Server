@@ -47,11 +47,19 @@ typedef struct request_s {
     char *args;
 } request_t;
 
+typedef struct cmd_s {
+    char *name;
+    int (*ptr)(client_t *, request_t);
+} cmd_t;
+
 // Core
 int my_ftp(int port, char *path);
 
 // Cmd handling
 int poll_loop(struct pollfd *poll_fds, nfds_t nfds);
+
+// Commands
+int user_cmd(client_t *client, request_t request);
 
 // Response
 void send_response(int client_fd, char *code, char *msg);
