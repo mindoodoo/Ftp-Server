@@ -32,6 +32,7 @@ int process_request(client_t *client, request_t request)
     cmd_t commands[] = {
         "user", &user_cmd,
         "pass", &pass_cmd,
+        "noop", &noop_cmd,
         "NULL", NULL
     };
 

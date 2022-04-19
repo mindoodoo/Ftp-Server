@@ -18,6 +18,7 @@
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
+#include <sys/select.h>
 #include <poll.h>
 
 #define ERR(msg) fprintf(stderr, msg);
@@ -57,6 +58,7 @@ int poll_loop(struct pollfd *poll_fds, nfds_t nfds);
 // Commands
 int user_cmd(client_t *client, request_t request);
 int pass_cmd(client_t *client, request_t request);
+int noop_cmd(client_t *client);
 
 // Response
 int send_response(int client_fd, char *code, char *msg);
