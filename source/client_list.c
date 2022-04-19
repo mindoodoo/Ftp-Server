@@ -50,6 +50,7 @@ client_t *create_client()
     new->previous = NULL;
     new->next = NULL;
     new->fd = 0;
-    new->state = NOTHING;
+    new->logged_in = 0;
+    new->state = AUTH_NEEDED;
     return new;
 }

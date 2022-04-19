@@ -31,6 +31,7 @@ int process_request(client_t *client, request_t request)
 {
     cmd_t commands[] = {
         "user", &user_cmd,
+        "pass", &pass_cmd,
         "NULL", NULL
     };
 
@@ -79,4 +80,5 @@ int poll_loop(struct pollfd *poll_fds, nfds_t nfds)
                 client_list = handle_connections(poll_fds[0].fd, client_list, poll_fds);
         }
     }
+    return 0;
 }

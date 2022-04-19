@@ -27,10 +27,6 @@
 #define AUTH_NEEDED 1
 #define AUTH_PASS_NEEDED 2
 
-// Login status macros
-#define LOGGED_IN 1
-#define LOGGED_OUT 0
-
 typedef struct client_s {
     int fd;
     int logged_in;
@@ -60,9 +56,10 @@ int poll_loop(struct pollfd *poll_fds, nfds_t nfds);
 
 // Commands
 int user_cmd(client_t *client, request_t request);
+int pass_cmd(client_t *client, request_t request);
 
 // Response
-void send_response(int client_fd, char *code, char *msg);
+int send_response(int client_fd, char *code, char *msg);
 
 // Parsing
 request_t parse_request(char *raw);

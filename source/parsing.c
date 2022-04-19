@@ -43,13 +43,17 @@ request_t parse_request(char *raw)
         return output;
     }
     split_msg = split_str(msg, " ");
-    if (strlen(split_msg[0]) != 4 || table_len(split_msg) != 2) {
+    if (table_len(split_msg) < 1 || strlen(split_msg[0]) != 4 ||
+    table_len(split_msg) > 2) {
         output.valid = 0;
         return output;
     }
     output.valid = 1;
     output.prefix = strdup(str_to_lowcase(split_msg[0]));
-    output.args = strdup(split_msg[1]);
+    if (table_len(split_msg) < 2)
+        output.args = strdup("");
+    else
+        output.args = strdup(split_msg[1]);
     free_table(split_msg);
     return output;
 }
