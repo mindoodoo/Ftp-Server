@@ -48,7 +48,7 @@ int nfds)
     client_t *client = NULL;
     request_t request;
 
-    for (int i = 0; i < nfds; i++)
+    for (int i = 1; i < nfds; i++)
         // Note this does not handle client disconnection
         if (poll_fds[i].revents & POLLIN) {
             if (!(client = find_client(poll_fds[i].fd, client_list)))
