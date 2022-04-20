@@ -1,6 +1,9 @@
-//
-// Created by mindoo on 19.04.22.
-//
+/*
+** EPITECH PROJECT, 2022
+** noop_cmd.c
+** File description:
+** .
+*/
 
 #include "server.h"
 
