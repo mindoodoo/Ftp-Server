@@ -14,6 +14,7 @@
 #include <stdlib.h>
 #include <ctype.h>
 #include <unistd.h>
+#include <stdarg.h>
 
 #include <sys/socket.h>
 #include <netinet/in.h>
@@ -58,10 +59,12 @@ int poll_loop(struct pollfd *poll_fds, nfds_t nfds);
 // Commands
 int user_cmd(client_t *client, request_t request);
 int pass_cmd(client_t *client, request_t request);
+
 int noop_cmd(client_t *client, request_t request);
+int usage_cmd(client_t *client, request_t request);
 
 // Response
-int send_response(int client_fd, char *code, char *msg);
+int send_response(int client_fd, char *code, int n_lines, ...);
 
 // Parsing
 request_t parse_request(char *raw);

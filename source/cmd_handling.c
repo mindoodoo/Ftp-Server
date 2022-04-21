@@ -20,7 +20,7 @@ struct pollfd *poll_fds)
         return client_list;
     } else {
         client_list = push(client_list, new_client);
-        send_response(new_client->fd, "220", "Service ready for new user");
+        send_response(new_client->fd, "220", 1, "Service ready for new user");
     }
     for (fd_index = 0; poll_fds[fd_index].fd != -1; fd_index++);
     poll_fds[fd_index].fd = new_client->fd;
@@ -33,6 +33,7 @@ int process_request(client_t *client, request_t request)
         "user", &user_cmd,
         "pass", &pass_cmd,
         "noop", &noop_cmd,
+        "help", &usage_cmd,
         "NULL", NULL
     };
 
@@ -59,10 +60,10 @@ int nfds)
             request = parse_request(raw);
             if (request.valid) {
                 if ((cmd_ret = process_request(client, request)) < 0)
-                    send_response(client->fd, "500", "Synthaxe Error, command unrecognized.");
+                    send_response(client->fd, "500", 1, "Synthaxe Error, command unrecognized.");
                 // Add else for client request to disconnect    
             } else
-                send_response(client->fd, "500", "Synthaxe Error, command unrecognized.");
+                send_response(client->fd, "500", 1, "Synthaxe Error, command unrecognized.");
         }
     free(raw); // Is reuse good idea ?
     return client_list;

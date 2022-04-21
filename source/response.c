@@ -7,12 +7,18 @@
 
 #include "server.h"
 
-int send_response(int client_fd, char *code, char *msg)
+int send_response(int client_fd, char *code, int n_lines, ...)
 {
-    // Not sure that the multiple consecutive writes work as intended, but let's try it
-    write(client_fd, code, strlen(code));
-    write(client_fd, " ", 1);
-    write(client_fd, msg, strlen(msg));
-    write(client_fd, "\r\n", 2);
+    va_list args;
+    char *msg = NULL;
+
+    va_start(args, n_lines);
+    for (int i = n_lines - 1; i >= 0; i--) {
+        msg = va_arg(args, char *);
+        if (i == 0)
+            dprintf(client_fd, "%s %s\r\n", code, msg);
+        else
+            dprintf(client_fd, "%s-%s\r\n", code, msg);
+    }
     return 0;
 }

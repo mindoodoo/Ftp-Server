@@ -15,7 +15,7 @@ SERVER_SRC = source/main.c \
 	source/parsing.c \
 	source/response.c \
 	source/commands/auth_cmd.c \
-	source/commands/noop_cmd.c
+	source/commands/simple_cmd.c
 
 all: server clean
 
