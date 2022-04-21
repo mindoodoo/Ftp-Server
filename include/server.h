@@ -58,7 +58,7 @@ int poll_loop(struct pollfd *poll_fds, nfds_t nfds);
 // Commands
 int user_cmd(client_t *client, request_t request);
 int pass_cmd(client_t *client, request_t request);
-int noop_cmd(client_t *client);
+int noop_cmd(client_t *client, request_t request);
 
 // Response
 int send_response(int client_fd, char *code, char *msg);

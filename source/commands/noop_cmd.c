@@ -7,7 +7,7 @@
 
 #include "server.h"
 
-int noop_cmd(client_t *client)
+int noop_cmd(client_t *client, request_t request)
 {
     if (!client->logged_in)
         return send_response(client->fd, "530", "Not logged in.");
