@@ -43,8 +43,7 @@ request_t parse_request(char *raw)
         return output;
     }
     split_msg = split_str(msg, " ");
-    if (table_len(split_msg) < 1 || strlen(split_msg[0]) != 4 ||
-    table_len(split_msg) > 2) {
+    if (table_len(split_msg) < 1 || table_len(split_msg) > 2) {
         output.valid = 0;
         return output;
     }

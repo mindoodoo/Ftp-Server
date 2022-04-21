@@ -17,5 +17,5 @@ int my_ftp(int port, char *path)
     if (!cmd_fd)
         return 1;
     poll_fds = init_poll_fds(nfds, cmd_fd);
-    poll_loop(poll_fds, nfds);
+    poll_loop(poll_fds, nfds, path);
 }

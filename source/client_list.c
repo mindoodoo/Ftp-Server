@@ -42,11 +42,13 @@ client_t *find_client(int fd, client_t *head)
     return NULL;
 }
 
-client_t *create_client()
+client_t *create_client(char *cwd)
 {
     client_t *new = malloc(sizeof(client_t));
 
     new->sock_len = sizeof(struct sockaddr_in);
+    new->original_cwd = cwd;
+    new->cwd = strdup(cwd);
     new->previous = NULL;
     new->next = NULL;
     new->fd = 0;

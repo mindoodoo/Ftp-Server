@@ -8,9 +8,9 @@
 #include "server.h"
 
 client_t *handle_connections(int server_fd, client_t *client_list,
-struct pollfd *poll_fds)
+struct pollfd *poll_fds, char *cwd)
 {
-    client_t *new_client = create_client();
+    client_t *new_client = create_client(cwd);
     int fd_index;
 
     new_client->fd = accept(server_fd,
@@ -34,6 +34,7 @@ int process_request(client_t *client, request_t request)
         "pass", &pass_cmd,
         "noop", &noop_cmd,
         "help", &usage_cmd,
+        "cwd", &cwd_cmd,
         "NULL", NULL
     };
 
@@ -69,7 +70,7 @@ int nfds)
     return client_list;
 }
 
-int poll_loop(struct pollfd *poll_fds, nfds_t nfds)
+int poll_loop(struct pollfd *poll_fds, nfds_t nfds, char *cwd)
 {
     int poll_ret = 0;
     client_t *client_list = NULL;
@@ -79,7 +80,7 @@ int poll_loop(struct pollfd *poll_fds, nfds_t nfds)
             client_list = client_handling(client_list, poll_fds, nfds);
             // Check for incoming connections
             if (poll_fds[0].revents)
-                client_list = handle_connections(poll_fds[0].fd, client_list, poll_fds);
+                client_list = handle_connections(poll_fds[0].fd, client_list, poll_fds, cwd);
         }
     }
     return 0;

@@ -35,6 +35,8 @@ typedef struct client_s {
     struct sockaddr_in client_sock;
     socklen_t sock_len;
     int state;
+    char *original_cwd;
+    char *cwd;
     struct client_s *next;
     struct client_s *previous;
 } client_t;
@@ -54,7 +56,7 @@ typedef struct cmd_s {
 int my_ftp(int port, char *path);
 
 // Cmd handling
-int poll_loop(struct pollfd *poll_fds, nfds_t nfds);
+int poll_loop(struct pollfd *poll_fds, nfds_t nfds, char *cwd);
 
 // Commands
 int user_cmd(client_t *client, request_t request);
@@ -62,6 +64,8 @@ int pass_cmd(client_t *client, request_t request);
 
 int noop_cmd(client_t *client, request_t request);
 int usage_cmd(client_t *client, request_t request);
+
+int cwd_cmd(client_t *client, request_t request);
 
 // Response
 int send_response(int client_fd, char *code, int n_lines, ...);
@@ -80,4 +84,4 @@ char *str_to_lowcase(char *str);
 client_t *push(client_t *head, client_t *new_client);
 void pop(client_t *client);
 client_t *find_client(int fd, client_t *head);
-client_t *create_client();
+client_t *create_client(char *cwd);

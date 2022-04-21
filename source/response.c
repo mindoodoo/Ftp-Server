@@ -20,5 +20,6 @@ int send_response(int client_fd, char *code, int n_lines, ...)
         else
             dprintf(client_fd, "%s-%s\r\n", code, msg);
     }
+    va_end(args);
     return 0;
 }
