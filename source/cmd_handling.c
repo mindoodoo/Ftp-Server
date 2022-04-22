@@ -7,8 +7,7 @@
 
 #include "server.h"
 
-client_t *handle_connections(int server_fd, client_t *client_list,
-fd_set *readfds, char *cwd)
+client_t *handle_connections(int server_fd, client_t *client_list, char *cwd)
 {
     client_t *new_client = create_client(cwd);
 
@@ -48,26 +47,29 @@ int nfds)
     int cmd_ret = 0;
     int ret = 1;
     char *raw = calloc(4096, sizeof(char));
-    client_t *client = NULL;
     client_t *head = client_list;
     request_t request;
 
     while (head) {
         if (FD_ISSET(head->fd, readfds)) {
             ret = read(head->fd, raw, 4096);
-            if (!ret)
+            if (!ret) {
                 client_list = pop(head, client_list);
+                head = client_list;
+                continue;
+            }
             request = parse_request(raw);
-            if (request.valid) {
+            if (request.valid)
                 if ((cmd_ret = process_request(head, request)) < 0)
                     send_response(head->fd, "500", 1, "Synthaxe Error, command unrecognized.");
-                // Add else for head request to disconnect
-            } else
+            else
                 send_response(head->fd, "500", 1, "Synthaxe Error, command unrecognized.");
+            free(request.args);
+            free(request.prefix);
         }
         head = head->next;
     }
-    free(raw); // Is reuse good idea ?
+    free(raw);
     return client_list;
 }
 
@@ -89,7 +91,7 @@ int select_loop(int nfds, char *cwd, int server_fd)
             client_list = client_handling(client_list, readfds, nfds);
             // Check for incoming connections
             if (FD_ISSET(server_fd, readfds))
-                client_list = handle_connections(server_fd, client_list, readfds, cwd);
+                client_list = handle_connections(server_fd, client_list, cwd);
         }
     }
     return 0;

@@ -24,7 +24,7 @@
 #define ERR(msg) fprintf(stderr, msg);
 
 // State macros for client / server exchanges
-#define NOTHING 0; // Used when client in no specific state
+#define NOTHING 0;
 #define AUTH_NEEDED 1
 #define AUTH_PASS_NEEDED 2
 
@@ -42,7 +42,7 @@ typedef struct client_s {
 
 typedef struct request_s {
     int valid;
-    char *prefix; // This may cause segfault depending on implementation
+    char *prefix;
     char *args;
 } request_t;
 

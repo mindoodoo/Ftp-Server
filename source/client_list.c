@@ -27,6 +27,7 @@ client_t *pop(client_t *client, client_t *list_head)
         next->previous = previous;
     if (previous)
         previous->next = next;
+    free(client->cwd);
     free(client);
     if (!previous)
         return next;
