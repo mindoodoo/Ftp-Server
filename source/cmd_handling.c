@@ -48,6 +48,7 @@ client_t *client_handling(client_t *client_list, struct pollfd *poll_fds,
 int nfds)
 {
     int cmd_ret = 0;
+    int ret = 0;
     char *raw = calloc(4096, sizeof(char));
     client_t *client = NULL;
     request_t request;
@@ -57,7 +58,11 @@ int nfds)
         if (poll_fds[i].revents & POLLIN) {
             if (!(client = find_client(poll_fds[i].fd, client_list)))
                 continue;
-            read(client->fd, raw, 4096);
+            ret = read(client->fd, raw, 4096);
+            if (!ret) {
+//                pop(client);
+                continue;
+            }
             request = parse_request(raw);
             if (request.valid) {
                 if ((cmd_ret = process_request(client, request)) < 0)
