@@ -48,7 +48,7 @@ client_t *client_handling(client_t *client_list, struct pollfd *poll_fds,
 int nfds)
 {
     int cmd_ret = 0;
-    int ret = 0;
+    int ret = 1;
     char *raw = calloc(4096, sizeof(char));
     client_t *client = NULL;
     request_t request;
@@ -60,7 +60,8 @@ int nfds)
                 continue;
             ret = read(client->fd, raw, 4096);
             if (!ret) {
-//                pop(client);
+                poll_fds[i].fd = -1;
+                pop(client);
                 continue;
             }
             request = parse_request(raw);
