@@ -59,10 +59,10 @@ int nfds)
                 continue;
             }
             request = parse_request(raw);
-            if (request.valid)
+            if (request.valid) {
                 if ((cmd_ret = process_request(head, request)) < 0)
                     send_response(head->fd, "500", 1, "Synthaxe Error, command unrecognized.");
-            else
+            } else
                 send_response(head->fd, "500", 1, "Synthaxe Error, command unrecognized.");
             free(request.args);
             free(request.prefix);
