@@ -35,6 +35,7 @@ int process_request(client_t *client, request_t request)
         "noop", &noop_cmd,
         "help", &usage_cmd,
         "cwd", &cwd_cmd,
+        "pwd", &pwd_cmd,
         "NULL", NULL
     };
 

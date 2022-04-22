@@ -14,3 +14,10 @@ int cwd_cmd(client_t *client, request_t request)
     client->cwd = request.args;
     return send_response(client->fd, "250", 1, "Requested file action okay, completed");
 }
+
+int pwd_cmd(client_t *client, request_t request)
+{
+    if (!client->logged_in)
+        return send_response(client->fd, "530", 1, "Not logged in.");
+    return send_response(client->fd, "257", 1, client->cwd);
+}

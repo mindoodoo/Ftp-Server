@@ -22,11 +22,9 @@ char **split_str(char *str, char *sep)
     output[0] = NULL;
     token = strtok_r(str, sep, &save_pointer);
     while (token) {
-        if (token) {
-            output[index] = strdup(token);
-            output[index + 1] = NULL;
-            index++;
-        }
+        output[index] = strdup(token);
+        output[index + 1] = NULL;
+        index++;
         token = strtok_r(NULL, sep, &save_pointer);
     }
     return output;
@@ -43,7 +41,7 @@ request_t parse_request(char *raw)
         return output;
     }
     split_msg = split_str(msg, " ");
-    if (table_len(split_msg) < 1 || table_len(split_msg) > 2) {
+    if (table_len(split_msg) < 1) {
         output.valid = 0;
         return output;
     }

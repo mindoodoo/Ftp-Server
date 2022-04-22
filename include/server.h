@@ -59,13 +59,17 @@ int my_ftp(int port, char *path);
 int poll_loop(struct pollfd *poll_fds, nfds_t nfds, char *cwd);
 
 // Commands
+    // auth cmds
 int user_cmd(client_t *client, request_t request);
 int pass_cmd(client_t *client, request_t request);
 
+    // simple cmds
 int noop_cmd(client_t *client, request_t request);
 int usage_cmd(client_t *client, request_t request);
 
+    // cwd cmds
 int cwd_cmd(client_t *client, request_t request);
+int pwd_cmd(client_t *client, request_t request);
 
 // Response
 int send_response(int client_fd, char *code, int n_lines, ...);
