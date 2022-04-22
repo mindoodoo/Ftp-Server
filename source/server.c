@@ -11,11 +11,9 @@
 int my_ftp(int port, char *path)
 {
     int cmd_fd = setup_cmd_socket(port);
-    nfds_t nfds = 10;
-    struct pollfd *poll_fds = NULL;
+    int nfds = 100;
 
     if (!cmd_fd)
         return 1;
-    poll_fds = init_poll_fds(nfds, cmd_fd);
-    poll_loop(poll_fds, nfds, path);
+    select_loop(nfds, path, cmd_fd);
 }

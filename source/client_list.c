@@ -18,7 +18,7 @@ client_t *push(client_t *head, client_t *new_client)
     return new_client;
 }
 
-void pop(client_t *client)
+client_t *pop(client_t *client, client_t *list_head)
 {
     client_t *previous = client->previous;
     client_t *next = client->next;
@@ -28,6 +28,10 @@ void pop(client_t *client)
     if (previous)
         previous->next = next;
     free(client);
+    if (!previous)
+        return next;
+    else
+        return list_head;
 }
 
 client_t *find_client(int fd, client_t *head)

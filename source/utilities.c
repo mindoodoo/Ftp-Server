@@ -30,18 +30,6 @@ int setup_cmd_socket(int port)
     return cmd_fd;
 }
 
-struct pollfd *init_poll_fds(int count, int server_fd)
-{
-    struct pollfd *poll_fds = calloc(count, sizeof(struct pollfd));
-
-    for (int i = 0; i < count; i++) {
-        poll_fds[i].fd = -1;
-        poll_fds[i].events = POLLIN;
-    }
-    poll_fds[0].fd = server_fd;
-    return poll_fds;
-}
-
 int table_len(char **table)
 {
     int count = 0;

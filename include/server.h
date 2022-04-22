@@ -20,7 +20,6 @@
 #include <netinet/in.h>
 #include <arpa/inet.h>
 #include <sys/select.h>
-#include <poll.h>
 
 #define ERR(msg) fprintf(stderr, msg);
 
@@ -56,7 +55,7 @@ typedef struct cmd_s {
 int my_ftp(int port, char *path);
 
 // Cmd handling
-int poll_loop(struct pollfd *poll_fds, nfds_t nfds, char *cwd);
+int select_loop(int nfds, char *cwd, int server_fd);
 
 // Commands
     // auth cmds
@@ -79,13 +78,12 @@ request_t parse_request(char *raw);
 
 // Utilities
 int setup_cmd_socket(int port);
-struct pollfd *init_poll_fds(int count, int server_fd);
 int table_len(char **table);
 void free_table(char **table);
 char *str_to_lowcase(char *str);
 
 // Client linked list
 client_t *push(client_t *head, client_t *new_client);
-void pop(client_t *client);
+client_t *pop(client_t *client, client_t *list_head);
 client_t *find_client(int fd, client_t *head);
 client_t *create_client(char *cwd);

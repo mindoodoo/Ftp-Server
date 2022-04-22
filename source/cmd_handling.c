@@ -8,10 +8,9 @@
 #include "server.h"
 
 client_t *handle_connections(int server_fd, client_t *client_list,
-struct pollfd *poll_fds, char *cwd)
+fd_set *readfds, char *cwd)
 {
     client_t *new_client = create_client(cwd);
-    int fd_index;
 
     new_client->fd = accept(server_fd,
     (struct sockaddr *)&new_client->client_sock, &new_client->sock_len);
@@ -22,8 +21,6 @@ struct pollfd *poll_fds, char *cwd)
         client_list = push(client_list, new_client);
         send_response(new_client->fd, "220", 1, "Service ready for new user");
     }
-    for (fd_index = 0; poll_fds[fd_index].fd != -1; fd_index++);
-    poll_fds[fd_index].fd = new_client->fd;
     return client_list;
 }
 
@@ -45,49 +42,54 @@ int process_request(client_t *client, request_t request)
     return -1;
 }
 
-client_t *client_handling(client_t *client_list, struct pollfd *poll_fds,
+client_t *client_handling(client_t *client_list, fd_set *readfds,
 int nfds)
 {
     int cmd_ret = 0;
     int ret = 1;
     char *raw = calloc(4096, sizeof(char));
     client_t *client = NULL;
+    client_t *head = client_list;
     request_t request;
 
-    for (int i = 1; i < nfds; i++)
-        // Note this does not handle client disconnection
-        if (poll_fds[i].revents & POLLIN) {
-            if (!(client = find_client(poll_fds[i].fd, client_list)))
-                continue;
-            ret = read(client->fd, raw, 4096);
-            if (!ret) {
-                poll_fds[i].fd = -1;
-                pop(client);
-                continue;
-            }
+    while (head) {
+        if (FD_ISSET(head->fd, readfds)) {
+            ret = read(head->fd, raw, 4096);
+            if (!ret)
+                client_list = pop(head, client_list);
             request = parse_request(raw);
             if (request.valid) {
-                if ((cmd_ret = process_request(client, request)) < 0)
-                    send_response(client->fd, "500", 1, "Synthaxe Error, command unrecognized.");
-                // Add else for client request to disconnect    
+                if ((cmd_ret = process_request(head, request)) < 0)
+                    send_response(head->fd, "500", 1, "Synthaxe Error, command unrecognized.");
+                // Add else for head request to disconnect
             } else
-                send_response(client->fd, "500", 1, "Synthaxe Error, command unrecognized.");
+                send_response(head->fd, "500", 1, "Synthaxe Error, command unrecognized.");
         }
+        head = head->next;
+    }
     free(raw); // Is reuse good idea ?
     return client_list;
 }
 
-int poll_loop(struct pollfd *poll_fds, nfds_t nfds, char *cwd)
+int select_loop(int nfds, char *cwd, int server_fd)
 {
-    int poll_ret = 0;
+    fd_set readfds[100];
     client_t *client_list = NULL;
-    
+    client_t *head = NULL;
+
     while (1) {
-        if ((poll_ret = poll(poll_fds, nfds, -1))) {
-            client_list = client_handling(client_list, poll_fds, nfds);
+        head = client_list;
+        FD_ZERO(readfds);
+        FD_SET(server_fd, readfds);
+        while (head) {
+            FD_SET(head->fd, readfds);
+            head = head->next;
+        }
+        if (select(nfds, readfds, NULL, NULL, NULL)) {
+            client_list = client_handling(client_list, readfds, nfds);
             // Check for incoming connections
-            if (poll_fds[0].revents)
-                client_list = handle_connections(poll_fds[0].fd, client_list, poll_fds, cwd);
+            if (FD_ISSET(server_fd, readfds))
+                client_list = handle_connections(server_fd, client_list, readfds, cwd);
         }
     }
     return 0;
