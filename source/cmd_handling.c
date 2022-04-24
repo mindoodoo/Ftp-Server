@@ -32,6 +32,7 @@ int process_request(client_t *client, request_t request)
         "help", &usage_cmd,
         "cwd", &cwd_cmd,
         "pwd", &pwd_cmd,
+        "quit", &quit_cmd,
         "NULL", NULL
     };
 
@@ -62,6 +63,10 @@ int nfds)
             if (request.valid) {
                 if ((cmd_ret = process_request(head, request)) < 0)
                     send_response(head->fd, "500", 1, "Synthaxe Error, command unrecognized.");
+                else if (cmd_ret == 1) {
+                    close(head->fd);
+                    client_list = pop(head, client_list);
+                }
             } else
                 send_response(head->fd, "500", 1, "Synthaxe Error, command unrecognized.");
             free(request.args);

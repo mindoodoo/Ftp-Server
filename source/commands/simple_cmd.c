@@ -16,3 +16,9 @@ int usage_cmd(client_t *client, request_t request)
 {
     return send_response(client->fd, "214", 1, "This is the usage");
 }
+
+int quit_cmd(client_t *client, request_t request)
+{
+    send_response(client->fd, "221", 1, "Service closing control connection");
+    return 1;
+}

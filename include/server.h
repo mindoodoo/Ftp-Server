@@ -66,6 +66,7 @@ int pass_cmd(client_t *client, request_t request);
     // simple cmds
 int noop_cmd(client_t *client, request_t request);
 int usage_cmd(client_t *client, request_t request);
+int quit_cmd(client_t *client, request_t request);
 
     // cwd cmds
 int cwd_cmd(client_t *client, request_t request);
