@@ -7,7 +7,6 @@
 
 #pragma once
 
-#include <sys/stat.h>
 
 #include <string.h>
 #include <stdio.h>
@@ -16,6 +15,7 @@
 #include <unistd.h>
 #include <stdarg.h>
 #include <limits.h>
+#include <sys/stat.h>
 
 #include <sys/socket.h>
 #include <netinet/in.h>
