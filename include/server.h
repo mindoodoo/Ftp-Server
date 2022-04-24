@@ -39,6 +39,7 @@ typedef struct client_s {
     char *cwd;
     struct client_s *next;
     struct client_s *previous;
+    int port;
 } client_t;
 
 typedef struct request_s {
@@ -67,6 +68,7 @@ int pass_cmd(client_t *client, request_t request);
 int noop_cmd(client_t *client, request_t request);
 int usage_cmd(client_t *client, request_t request);
 int quit_cmd(client_t *client, request_t request);
+int port_cmd(client_t *client, request_t request);
 
     // cwd cmds
 int cwd_cmd(client_t *client, request_t request);

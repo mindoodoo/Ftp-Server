@@ -33,6 +33,7 @@ int process_request(client_t *client, request_t request)
         "cwd", &cwd_cmd,
         "pwd", &pwd_cmd,
         "quit", &quit_cmd,
+        "port", &port_cmd,
         "NULL", NULL
     };
 

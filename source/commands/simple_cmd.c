@@ -22,3 +22,10 @@ int quit_cmd(client_t *client, request_t request)
     send_response(client->fd, "221", 1, "Service closing control connection");
     return 1;
 }
+
+int port_cmd(client_t *client, request_t request)
+{
+    if (request.args[0] == '\0' || (client->port = atol(request.args)) <= 0)
+        return send_response(client->fd, "501", 1, "Synthaxe error in params or args");
+    return send_response(client->fd, "200", 1, "Command Ok.");
+}
