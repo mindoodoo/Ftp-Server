@@ -16,6 +16,7 @@
 #include <stdarg.h>
 #include <limits.h>
 #include <sys/stat.h>
+#include <libgen.h>
 
 #include <sys/socket.h>
 #include <netinet/in.h>
@@ -73,6 +74,7 @@ int port_cmd(client_t *client, request_t request);
     // cwd cmds
 int cwd_cmd(client_t *client, request_t request);
 int pwd_cmd(client_t *client, request_t request);
+int cdup_cmd(client_t *client, request_t request);
 
 // Response
 int send_response(int client_fd, char *code, int n_lines, ...);

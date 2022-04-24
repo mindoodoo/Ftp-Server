@@ -32,7 +32,19 @@ int cwd_cmd(client_t *client, request_t request)
 
 int pwd_cmd(client_t *client, request_t request)
 {
-    if (!client->logged_in)
+    if(!client->logged_in)
         return send_response(client->fd, "530", 1, "Not logged in.");
     return send_response(client->fd, "257", 1, client->cwd);
+}
+
+int cdup_cmd(client_t *client, request_t request)
+{
+    char *new_path = NULL;
+
+    if(!client->logged_in)
+        return send_response(client->fd, "530", 1, "Not logged in.");
+    new_path = realpath(dirname(client->cwd), NULL);
+    free(client->cwd);
+    client->cwd = new_path;
+    return send_response(client->fd, "200", 1, "Command Ok..");
 }
