@@ -35,6 +35,7 @@ int process_request(client_t *client, request_t request)
         "quit", &quit_cmd,
         "port", &port_cmd,
         "cdup", &cdup_cmd,
+        "pasv", &passv_cmd,
         "NULL", NULL
     };
 

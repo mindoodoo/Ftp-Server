@@ -41,6 +41,7 @@ typedef struct client_s {
     struct client_s *next;
     struct client_s *previous;
     int port;
+    int passive_mode;
 } client_t;
 
 typedef struct request_s {
@@ -70,6 +71,7 @@ int noop_cmd(client_t *client, request_t request);
 int usage_cmd(client_t *client, request_t request);
 int quit_cmd(client_t *client, request_t request);
 int port_cmd(client_t *client, request_t request);
+int passv_cmd(client_t *client, request_t request);
 
     // cwd cmds
 int cwd_cmd(client_t *client, request_t request);

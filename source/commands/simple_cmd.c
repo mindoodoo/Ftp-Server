@@ -31,3 +31,19 @@ int port_cmd(client_t *client, request_t request)
         return send_response(client->fd, "501", 1, "Synthaxe error in params or args");
     return send_response(client->fd, "200", 1, "Command Ok.");
 }
+
+int passv_cmd(client_t *client, request_t request)
+{
+    int ip1 = 127;
+    int ip2 = 0;
+    int ip3 = 0;
+    int ip4 = 1;
+    int p1 = 50;
+    int p2 = 47;
+
+    if (!client->logged_in)
+        return send_response(client->fd, "530", 1, "Not logged in.");
+    client->passive_mode = 1;
+    dprintf(client->fd, "227 %d,%d,%d,%d,%d,%d\r\n", ip1, ip2, ip3, ip4, p1, p2);
+    return 0;
+}

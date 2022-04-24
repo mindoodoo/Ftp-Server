@@ -59,5 +59,7 @@ client_t *create_client(char *cwd)
     new->fd = 0;
     new->logged_in = 0;
     new->state = AUTH_NEEDED;
+    new->passive_mode = 0;
+    new->port = 0;
     return new;
 }
