@@ -1,0 +1,3 @@
+#!/bin/sh
+
+{ sleep 0.2; echo user Anonymous; sleep 0.2; echo pass && cat; } | nc 127.0.0.1 8888
