@@ -23,7 +23,7 @@ client_t *handle_connections(int server_fd, client_t *client_list, char *cwd)
     return client_list;
 }
 
-int process_request(client_t *client, request_t request)
+int execute_request(client_t *client, request_t request)
 {
     cmd_t commands[] = {
         "user", &user_cmd,
@@ -45,10 +45,31 @@ int process_request(client_t *client, request_t request)
     return -1;
 }
 
+client_t *handle_request(client_t *client_list, client_t *head,
+char *raw)
+{
+    int cmd_ret;
+    request_t request = parse_request(raw);
+
+    if (request.valid) {
+        if ((cmd_ret = execute_request(head, request)) < 0)
+            send_response(head->fd, "500", 1,
+            "Synthaxe Error, command unrecognized.");
+        if (cmd_ret == 1) {
+            close(head->fd);
+            client_list = pop(head, client_list);
+        }
+    } else
+        send_response(head->fd, "500", 1,
+        "Synthaxe Error, command unrecognized.");
+    free(request.args);
+    free(request.prefix);
+    return client_list;
+}
+
 client_t *client_handling(client_t *client_list, fd_set *readfds,
 int nfds)
 {
-    int cmd_ret = 0;
     int ret = 1;
     char *raw = calloc(4096, sizeof(char));
     client_t *head = client_list;
@@ -62,18 +83,7 @@ int nfds)
                 head = client_list;
                 continue;
             }
-            request = parse_request(raw);
-            if (request.valid) {
-                if ((cmd_ret = process_request(head, request)) < 0)
-                    send_response(head->fd, "500", 1, "Synthaxe Error, command unrecognized.");
-                else if (cmd_ret == 1) {
-                    close(head->fd);
-                    client_list = pop(head, client_list);
-                }
-            } else
-                send_response(head->fd, "500", 1, "Synthaxe Error, command unrecognized.");
-            free(request.args);
-            free(request.prefix);
+            client_list = handle_request(client_list, head, raw);
         }
         head = head->next;
     }
@@ -97,7 +107,6 @@ int select_loop(int nfds, char *cwd, int server_fd)
         }
         if (select(nfds, readfds, NULL, NULL, NULL)) {
             client_list = client_handling(client_list, readfds, nfds);
-            // Check for incoming connections
             if (FD_ISSET(server_fd, readfds))
                 client_list = handle_connections(server_fd, client_list, cwd);
         }

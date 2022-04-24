@@ -18,7 +18,7 @@ int setup_cmd_socket(int port)
     server_addr.sin_family = AF_INET;
     server_addr.sin_port = ntohs(port);
     server_addr.sin_addr.s_addr = htonl(INADDR_ANY);
-    setsockopt(cmd_fd, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt)); // Allow reuse
+    setsockopt(cmd_fd, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt));
     if (bind(cmd_fd, (struct sockaddr *)&server_addr, sock_len) < 0) {
         ERR("Server command socket binding failed\n");
         return 0;
@@ -51,5 +51,3 @@ char *str_to_lowcase(char *str)
         str[i] = tolower(str[i]);
     return str;
 }
-
-

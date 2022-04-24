@@ -14,13 +14,14 @@ int user_cmd(client_t *client, request_t request)
         return send_response(client->fd, "230", 1, "User logged in, proceed");
     if (!strcmp(request.args, "Anonymous")) {
         client->state = AUTH_PASS_NEEDED;
-        return send_response(client->fd, "331", 1, "User name okay, need password.");
+        return send_response(client->fd, "331", 1,
+        "User name okay, need password.");
     }
     if (client->state == AUTH_PASS_NEEDED) {
         client->state = AUTH_NEEDED;
         return send_response(client->fd, "503", 1, "Bad sequence of commands");
     }
-    return send_response(client->fd, "530", 1, "Not logged in"); // Not sure about this one
+    return send_response(client->fd, "530", 1, "Not logged in");
 }
 
 // Note anonymous user is hardcoded

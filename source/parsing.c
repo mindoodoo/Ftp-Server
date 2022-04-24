@@ -47,10 +47,7 @@ request_t parse_request(char *raw)
     }
     output.valid = 1;
     output.prefix = strdup(str_to_lowcase(split_msg[0]));
-    if (table_len(split_msg) < 2)
-        output.args = strdup("");
-    else
-        output.args = strdup(split_msg[1]);
+    output.args = table_len(split_msg) < 2 ? strdup("") : strdup(split_msg[1]);
     free_table(split_msg);
     return output;
 }

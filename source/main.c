@@ -11,7 +11,8 @@ void display_usage()
 {
     printf("USAGE: ./myftp port path\n");
     printf("\tport is the port number on which the server socket listens\n");
-    printf("\tpath is the path to the home directory for the Anonymour user\n");
+    printf("\tpath is the path to the home ");
+    printf("directory for the Anonymour user\n");
 }
 
 // Returns -1 if main needs to exit without error
