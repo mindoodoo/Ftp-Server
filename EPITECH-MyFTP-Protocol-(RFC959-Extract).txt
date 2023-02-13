@@ -31,7 +31,7 @@ The following are the mandatory FTP commands from client to server:
 
             RETR <SP> <pathname> <CRLF>   : Download file from server to client
             STOR <SP> <pathname> <CRLF>   : Upload file from client to server
-            LIST [<SP> <pathname>] <CRLF> : List files in the current working directory 
+            LIST [<SP> <pathname>] <CRLF> : List files in the current working directory
 
 
 Command-Reply Sequences (Mandatory part)
